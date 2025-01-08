@@ -8,16 +8,28 @@ const loadCategories = () => {
     .then((data) => displayCategories(data.categories))
     .catch((error) => console.log(error));
 };
-// create displayCategories
+
+const loadCategoriesId = (id)=>{
+  
+  // fetch the id data 
+  fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
+    .then((res) => res.json())
+    .then((data) =>displayVideos(data.category))
+    .catch((error) => console.log(error));
+
+}
+// Display displayCategories
 const displayCategories = (categories) => {
-  const buttonContainer = document.getElementById("button-container");
+  const sectionContainer = document.getElementById("button-container");
+
   categories.forEach((item) => {
     // console.log(item.category);
     // Crate a Button
-    const button = document.createElement("button");
-    button.classList = "btn";
-    button.innerText = item.category;
-    buttonContainer.appendChild(button);
+    const div = document.createElement("div");
+    div.innerHTML = `
+    <button onclick="loadCategoriesId(${item.category_id})" class="btn">${item.category} </button>
+    `
+    sectionContainer.appendChild(div);
   });
 };
 
@@ -51,6 +63,20 @@ const demoVideo ={
 const displayVideos = (videos) => {
     
   const videoContainer= document.getElementById('videos-container')
+  videoContainer.innerHTML =""
+  if(videos.length==0){
+    videoContainer.classList.remove('grid')
+    videoContainer.innerHTML=`
+    <div class="flex flex-col justify-center items-center">
+      <img class="h-96 w-96" src="assets/Icon.png"/>
+      <h2> No Video Conten Here </h2>
+    </div>
+    `
+    return
+  }
+  else{
+    videoContainer.classList.add('grid')
+  }
   videos.forEach((video) => {
     console.log(video)
     const card = document.createElement("div");
@@ -59,7 +85,7 @@ const displayVideos = (videos) => {
        <img class="h-full w-full rounded-lg object-cover"
          src=${video.thumbnail}
         alt="Shoes" />
-       ${video.others.posted_date.length == 0 ? " " : `        <span class="absolute right-2 bottom-2 bg-slate-400 px-4 py-2 rounded-lg ">${video.others.posted_date} </span>`}
+       ${video.others.posted_date.length == 0 ? " " : `        <span class="absolute right-2 bottom-2 bg-slate-400 px-4 py-2 rounded-lg ">${timeCount(video.others.posted_date)}</span>`}
      </figure>
      <div class=" py-5 flex gap-5">
        <div> <img class="h-10 w-10 rounded-full object-cover" src=${video.authors[0].profile_picture}/> </div>
@@ -77,6 +103,15 @@ const displayVideos = (videos) => {
     videoContainer.appendChild(card)
   });
 };
+
+// TIME COUNT
+function timeCount(time){
+  const hour = parseInt(time/3600)
+  let remainingSecond = time% 3600  
+  const minit = parseInt(remainingSecond/60)
+  remainingSecond =remainingSecond % 60
+  return `${hour} hour ${minit} minit ${remainingSecond} second ago`
+}
 
 loadVideos();
 loadCategories();
