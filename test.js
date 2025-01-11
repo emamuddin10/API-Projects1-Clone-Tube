@@ -1,2 +1,2 @@
 
-console.log(timeCount(16078))
+console.log(timeCount(16))
