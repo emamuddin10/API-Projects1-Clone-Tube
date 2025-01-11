@@ -104,7 +104,7 @@ const displayVideos = (videos) => {
   });
 };
 
-// TIME COUNT
+// TIME COUNTER
 function timeCount(time){
   const hour = parseInt(time/3600)
   let remainingSecond = time% 3600  
